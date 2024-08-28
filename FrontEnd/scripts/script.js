@@ -45,7 +45,6 @@ function fetchCategories() {
         })
         .then(categories => {
             console.log(categories); // Affiche les catégories dans la console
-            createCategoryButtons(categories); // Crée les boutons de catégorie
         })
         .catch(error => {
             console.error('Une erreur est survenue lors de la récupération des catégories:', error);
@@ -54,4 +53,6 @@ function fetchCategories() {
 //mettre en place les gestionnaire d'evenement pour le clic sur les bouton des catégories
 
 //appeler la fonction qui récupère les données de l'api 
-fetchData()
+fetchData();
+
+fetchCategories();
