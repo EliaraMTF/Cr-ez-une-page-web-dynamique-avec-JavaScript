@@ -37,7 +37,7 @@ function injectDataIntoHTML(data) {
 }
 
 //récuperer les catégories à partir de l'api
-/*function fetchCategories() {
+function fetchCategories() {
     console.log("fetchCategories");
     fetch("http://localhost:5678/api/categories") //Envoie une requête GET à l'URL spécifiée.
         .then(response => { //Traite la réponse obtenue.
@@ -48,14 +48,28 @@ function injectDataIntoHTML(data) {
         })
         .then(categories => {
             console.log(categories); // Affiche les catégories dans la console
+            displayCategories(categories);
         })
         .catch(error => {
             console.error('Une erreur est survenue lors de la récupération des catégories:', error);
         });
-}*/
+}
+function displayCategories(dataCategories) {
+    const objectsHTML = document.getElementById('objectCategories');
+    
+    dataCategories.forEach(category => {
+        const buttonHTML = document.createElement('button');
+        buttonHTML.value = category.name;
+        console.log(category);
+        console.log(buttonHTML);
+        console.log(objectsHTML);
+        objectsHTML.appendChild(buttonHTML);
+    })
+}
 //mettre en place les gestionnaire d'evenement pour le clic sur les bouton des catégories
 
 //appeler la fonction qui récupère les données de l'api 
 fetchData();
 
-//fetchCategories();
+fetchCategories();
+

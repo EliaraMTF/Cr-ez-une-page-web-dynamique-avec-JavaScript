@@ -8,7 +8,7 @@ const element = {
 let boutonLogin = element.submit.addEventListener("click", (a) => {
     a.preventDefault();
 
-    fetch("http://localhost:5678/api/users/login", {   // Effectue une requête POST à l'API pour se connecter
+    fetch("http://localhost:5678/api/users/login", { // Effectue une requête POST à l'API pour se connecter
         method: "POST", // Méthode HTTP pour envoyer les données au serveur
         headers: {
             Accept: "application/json", // Indique que la réponse attendue doit être en JSON
