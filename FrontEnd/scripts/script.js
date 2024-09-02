@@ -58,4 +58,4 @@ function injectDataIntoHTML(data) {
 //appeler la fonction qui récupère les données de l'api 
 fetchData();
 
-fetchCategories();
+//fetchCategories();
