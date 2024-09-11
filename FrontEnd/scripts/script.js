@@ -10,7 +10,7 @@ function fetchData(){
     })
     .then(data => {                      //Les données JSON sont disponibles ici.
         console.log(data);               //Affiche les données dans la console (ou les traite selon vos besoins).
-        injectDataIntoHTML(data);
+        injectDataIntoHTML(data);              
     })
     .catch(error => {                    //Gère toute erreur qui se produit lors de la requête.
         console.error('Une erreur est survenue:', error);
@@ -69,6 +69,7 @@ function displayCategories(dataCategories) {
         buttonHTML.value = category.name;
         buttonHTML.classList.add('category-button'); // Ajoute une classe au bouton
         buttonHTML.innerHTML = category.name; // Ajoute le texte dans le bouton
+        buttonHTML.addEventListener("click", boutonFiltreActif)
         console.log(category);
         console.log(buttonHTML);
         console.log(objectsHTML);
@@ -76,6 +77,11 @@ function displayCategories(dataCategories) {
     })
 }
 //mettre en place les gestionnaire d'evenement pour le clic sur les bouton des catégories
+function boutonFiltreActif() {
+    console.log(boutonFiltreActif);
+    // faire en sorte que dès l'appui d'un bouton = trie d'image par catégorie
+    
+}
 
 //appeler la fonction qui récupère les données de l'api 
 fetchData();
