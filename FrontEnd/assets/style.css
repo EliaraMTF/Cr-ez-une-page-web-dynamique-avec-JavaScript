@@ -125,6 +125,38 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+#objectCategories {
+	display: flex;
+	justify-content: center; 
+	flex-wrap: wrap; 
+	gap: 1em; 
+	margin-bottom: 20px; 
+  }
+
+.category-button {
+	border: 1px solid #1d6154;
+	border-radius: 60px;
+	padding: 10px;
+	min-width: 100px;
+	white-space: nowrap;
+	text-align: center;
+	cursor: pointer;
+	font-weight: 700;
+	font-size: 16px;
+	color: #1d6154;
+	margin-bottom: 15px; 
+	transition: all 0.1s ease;
+	font-family: 'Syne', sans-serif; 
+  }
+  
+  .category-button:hover,
+  .category-button.active {
+	background-color: #1d6154;
+	color: #fff;
+	border-color: #fff;
+  }
+
 .gallery {
 	width: 100%;
 	display: grid;

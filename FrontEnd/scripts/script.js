@@ -56,10 +56,19 @@ function fetchCategories() {
 }
 function displayCategories(dataCategories) {
     const objectsHTML = document.getElementById('objectCategories');
+
+    // Créer le bouton "Tous"
+    const allButtonHTML = document.createElement('button');
+    allButtonHTML.value = 'Tous';
+    allButtonHTML.classList.add('category-button');
+    allButtonHTML.innerHTML = 'Tous';
+    objectsHTML.appendChild(allButtonHTML);
     
     dataCategories.forEach(category => {
         const buttonHTML = document.createElement('button');
         buttonHTML.value = category.name;
+        buttonHTML.classList.add('category-button'); // Ajoute une classe au bouton
+        buttonHTML.innerHTML = category.name; // Ajoute le texte dans le bouton
         console.log(category);
         console.log(buttonHTML);
         console.log(objectsHTML);
