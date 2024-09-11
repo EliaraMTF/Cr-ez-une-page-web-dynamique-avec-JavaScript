@@ -137,6 +137,46 @@ li:hover {
 	width: 100%;
 
 }
+#login-form {
+	width: 50%;
+	margin: auto;
+}
+
+#login-form {
+	padding-top: 100px;
+}
+
+#login-form > {
+  text-align: center;
+}
+
+#login-form h2 {
+	margin-bottom: 20px;
+}
+
+#login-form form {
+  text-align: left;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+#login-form input { 
+  height: 50px;
+  font-size: 1.2em;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#login-form label {
+  margin: 2em 0 1em 0;
+}
+
+#login-form .forgot {
+	text-decoration-line: underline;
+	text-align: center;
+}
+
 #contact {
 	width: 50%;
 margin: auto;
