@@ -82,17 +82,27 @@ h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
 
+
 }
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
+}
+
+.nav-active a {
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
 }
 
 li:hover {
@@ -134,6 +144,7 @@ li:hover {
 	margin-bottom: 20px; 
   }
 
+  /* Bouton par défaut */
 .category-button {
 	border: 1px solid #1d6154;
 	border-radius: 60px;
@@ -144,18 +155,27 @@ li:hover {
 	cursor: pointer;
 	font-weight: 700;
 	font-size: 16px;
-	color: #1d6154;
-	margin-bottom: 15px; 
+	color: #1d6154; /* Vert pour le texte */
+	background-color: white; /* Couleur de fond blanche par défaut */
+	margin-bottom: 15px;
 	transition: all 0.1s ease;
-	font-family: 'Syne', sans-serif; 
+	font-family: 'Syne', sans-serif;
   }
   
-  .category-button:hover,
+  /* Bouton actif */
   .category-button.active {
 	background-color: #1d6154;
-	color: #fff;
-	border-color: #fff;
+	color: white;
+	border-color: #1d6154;
   }
+  
+  /* Hover */
+  .category-button:hover {
+	background-color: #1d6154;
+	color: white;
+	border-color: #1d6154;
+  }
+  
 
 .gallery {
 	width: 100%;
@@ -206,6 +226,7 @@ li:hover {
 
 #login-form .forgot {
 	text-decoration-line: underline;
+	color: #3d3d3d;
 	text-align: center;
 }
 

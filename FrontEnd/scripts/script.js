@@ -1,30 +1,34 @@
-//créer la fonction pour récuperer les données de l'api
-function fetchData(){
-    console.log("fetchData");
-    fetch("http://localhost:5678/api/works") //Envoie une requête GET à l'URL spécifiée.
-    .then(response => {                  //Traite la réponse obtenue.
-        if (!response.ok) {              //Vérifie si la réponse est correcte
-            throw new Error(`Erreur HTTP! Statut: ${response.status}`); //Si la réponse est incorrecte = erreur
-        }
-        return response.json();
-    })
-    .then(data => {                      //Les données JSON sont disponibles ici.
-        console.log(data);               //Affiche les données dans la console (ou les traite selon vos besoins).
-        injectDataIntoHTML(data);              
-    })
-    .catch(error => {                    //Gère toute erreur qui se produit lors de la requête.
-        console.error('Une erreur est survenue:', error);
-    });
-}
-//Une fois les donner récuperés, appeler la fonction qui me permet d'injecter les données dans l'html 
+// Stocker toutes les données des images
+let allData = []; // Variable globale pour stocker toutes les données des images
 
-//créer la fonction pour injecter les données dans l'html
+// Fonction pour récupérer les données des images
+function fetchData() {
+    console.log("fetchData");
+    fetch("http://localhost:5678/api/works") // Envoie une requête GET à l'URL spécifiée.
+        .then(response => {                  
+            if (!response.ok) {              
+                throw new Error(`Erreur HTTP! Statut: ${response.status}`); 
+            }
+            return response.json();
+        })
+        .then(data => {                     
+            allData = data;  // Stocker les données globalement
+            injectDataIntoHTML(data); // Injecter toutes les données initialement         
+            console.log(data);     
+        })
+        .catch(error => {                    
+            console.error('Une erreur est survenue:', error);
+        });
+}
+
+// Fonction pour injecter les données dans l'HTML
 function injectDataIntoHTML(data) {
     const galleryHTML = document.getElementById('gallery'); // Sélectionne la galerie
+    galleryHTML.innerHTML = ''; // Vide la galerie avant d'ajouter de nouveaux éléments
 
     data.forEach(work => {
         const figureHTML = document.createElement('figure'); // Crée un élément figure
-        const imgHTML  = document.createElement('img');
+        const imgHTML = document.createElement('img');
         const figcaptionHTML = document.createElement('figcaption');
 
         imgHTML.src = work.imageUrl;
@@ -36,55 +40,80 @@ function injectDataIntoHTML(data) {
     });
 }
 
-//récuperer les catégories à partir de l'api
+// Fonction pour récupérer les catégories à partir de l'API
 function fetchCategories() {
     console.log("fetchCategories");
-    fetch("http://localhost:5678/api/categories") //Envoie une requête GET à l'URL spécifiée.
-        .then(response => { //Traite la réponse obtenue.
-            if (!response.ok) { //Vérifie si la réponse est correcte
-                throw new Error(`Erreur HTTP! Statut: ${response.status}`); //Si la réponse est incorrecte = erreur
+    fetch("http://localhost:5678/api/categories") 
+        .then(response => { 
+            if (!response.ok) { 
+                throw new Error(`Erreur HTTP! Statut: ${response.status}`); 
             }
             return response.json();
         })
         .then(categories => {
-            console.log(categories); // Affiche les catégories dans la console
-            displayCategories(categories);
+            console.log(categories); 
+            displayCategories(categories); // Afficher les catégories
         })
         .catch(error => {
             console.error('Une erreur est survenue lors de la récupération des catégories:', error);
         });
 }
+
+// Fonction pour afficher les boutons de catégories
 function displayCategories(dataCategories) {
     const objectsHTML = document.getElementById('objectCategories');
 
     // Créer le bouton "Tous"
     const allButtonHTML = document.createElement('button');
     allButtonHTML.value = 'Tous';
-    allButtonHTML.classList.add('category-button');
+    allButtonHTML.classList.add('category-button', 'active'); // "Tous" est actif par défaut
     allButtonHTML.innerHTML = 'Tous';
+    allButtonHTML.addEventListener("click", () => filterByCategory('Tous'));
     objectsHTML.appendChild(allButtonHTML);
     
+    // Créer un bouton pour chaque catégorie
     dataCategories.forEach(category => {
         const buttonHTML = document.createElement('button');
         buttonHTML.value = category.name;
-        buttonHTML.classList.add('category-button'); // Ajoute une classe au bouton
-        buttonHTML.innerHTML = category.name; // Ajoute le texte dans le bouton
-        buttonHTML.addEventListener("click", boutonFiltreActif)
-        console.log(category);
-        console.log(buttonHTML);
-        console.log(objectsHTML);
+        buttonHTML.classList.add('category-button'); 
+        buttonHTML.innerHTML = category.name;
+        buttonHTML.addEventListener("click", () => filterByCategory(category.name)); // Ajouter l'événement pour le filtrage
         objectsHTML.appendChild(buttonHTML);
-    })
-}
-//mettre en place les gestionnaire d'evenement pour le clic sur les bouton des catégories
-function boutonFiltreActif() {
-    console.log(boutonFiltreActif);
-    // faire en sorte que dès l'appui d'un bouton = trie d'image par catégorie
-    
+    });
+
+    // Ajouter l'événement pour rendre les boutons actifs
+    addActiveClassToButtons();
 }
 
-//appeler la fonction qui récupère les données de l'api 
+// Fonction pour filtrer les données par catégorie
+function filterByCategory(categoryName) {
+    console.log("Filtrage par catégorie:", categoryName);
+
+    let filteredData;
+    if (categoryName === 'Tous') {
+        filteredData = allData; // Si "Tous" est sélectionné, on affiche tout
+    } else {
+        // Filtrer les données par le nom de la catégorie
+        filteredData = allData.filter(work => work.category.name === categoryName);
+    }
+
+    injectDataIntoHTML(filteredData); // Réinjecter les données filtrées dans l'HTML
+}
+
+// Fonction pour ajouter la classe 'active' aux boutons pour gerer les couleurs 
+function addActiveClassToButtons() {
+    const buttons = document.querySelectorAll('.category-button');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Retirer la classe active de tous les boutons
+            buttons.forEach(btn => btn.classList.remove('active'));
+            // Ajouter la classe active au bouton cliqué
+            button.classList.add('active');
+        });
+    });
+}
+
+// Appeler les fonctions qui récupèrent les données de l'API 
 fetchData();
-
 fetchCategories();
-
