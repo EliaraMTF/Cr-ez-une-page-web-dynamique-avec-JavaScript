@@ -91,9 +91,17 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
-
 }
+
+nav ul li a {
+    color: black; /* Couleur du texte */
+    text-decoration: none; /* Supprime le soulignement */
+}
+
+nav ul li a:hover {
+    color: #B1663C; /* Couleur lors du survol */
+}
+
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
@@ -247,7 +255,6 @@ margin: auto;
 	display: flex;
 	flex-direction: column;
 }
-
 #contact input {
 	height: 50px;
 	font-size: 1.2em;
