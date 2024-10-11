@@ -16,8 +16,8 @@ function setupModals() {
   const addPhotoButton = document.getElementById("addPhotoButton");
   const backButton = document.querySelector(".js-modal-back");
 
-  addPhotoButton?.addEventListener("click", openAddWorkModal);
-  backButton?.addEventListener("click", backToGalleryModal);
+  addPhotoButton?.addEventListener("click", addWork);
+  // backButton?.addEventListener("click", backToGalleryModal); faire la fonction backToGalleryModal
 }
 
 function openModal(e) {

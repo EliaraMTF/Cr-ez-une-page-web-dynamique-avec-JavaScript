@@ -303,11 +303,11 @@ footer nav ul {
   }
   
   #edit-works {
-	display: flex;
+	/* display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	gap: 10px;
+	gap: 10px; */
 	cursor: pointer;
   }
   
@@ -322,6 +322,10 @@ footer nav ul {
 	font-size: 15px;
   }
   
+  .hide {
+	display: none;
+  }
+
   .modal {
 	position: fixed;
 	display: none;

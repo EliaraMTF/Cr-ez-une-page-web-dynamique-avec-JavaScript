@@ -114,16 +114,26 @@ function addActiveClassToButtons() {
     });
 }
 
+function checkToken() {
+    // vérifier la préscence du Token dans la session storage
+    const tokenStorage = sessionStorage.getItem("Token");
+    if (tokenStorage) { 
+        // afficher bouton modifier
+        // Faire la liaison avant HTML classList.remove("hide");
+        // changer le mot login en logout
+    }
+}
 
 function logout() {
     // Effacer Token dans le storage
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
     // Changer logout en login
+
 }
 
 
 // Appeler les fonctions qui récupèrent les données de l'API 
-checkToken();
 fetchData();
 fetchCategories();
+checkToken();
