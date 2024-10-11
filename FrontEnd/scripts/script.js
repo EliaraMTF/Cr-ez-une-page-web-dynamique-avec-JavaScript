@@ -114,38 +114,13 @@ function addActiveClassToButtons() {
     });
 }
 
-function checkToken() {
-    const dataToken = sessionStorage.getItem('Token');
-    
-    if (dataToken && dataToken !== "") {
-       const logHTML =  document.getElementById("Log");
-        // changer login en Logout
-        logHTML.innerHTML = 'Logout';
-        displayModif();
-    }
-}
-
-function displayModif(){
-    const modifHTML = document.getElementById("modif");
-    // enlever la classe 'notDisplay'
-    modifHTML.classList.remove('notDisplay');
-}
-
-// Créer gestionnaire d'evenement pour le bouton 'modifier' 
-
-// Si clic appel de la fonction pour afficher la modale 
-function displayModale() {
-    console.log('Modale')
-}
-
 
 function logout() {
-    // Effacer Token dans le storage 
+    // Effacer Token dans le storage
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     // Changer logout en login
 }
-
-// ajouter le bouton 'modifier' à coter de "Mes projets"
-
 
 
 // Appeler les fonctions qui récupèrent les données de l'API 
