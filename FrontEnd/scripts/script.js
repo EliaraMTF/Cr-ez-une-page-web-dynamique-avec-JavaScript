@@ -125,7 +125,6 @@ function checkToken() {
         // Changer le texte du lien "login" en "logout"
         const loginLink = document.getElementById('Log');
         loginLink.textContent = 'logout';
-
         // Modifier l'attribut href pour pointer vers la fonction de déconnexion
         loginLink.href = '#';
         loginLink.onclick = logout; // Associer l'événement de clic à la déconnexion

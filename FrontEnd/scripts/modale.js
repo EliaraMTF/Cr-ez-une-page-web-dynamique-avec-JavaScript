@@ -22,12 +22,14 @@ function setupModals() {
 
 function openModal(e) {
   e.preventDefault();
+  console.log('data', allData);
   modal = document.getElementById("modalGallery");
   if (!modal) return;
   lastFocusedElement = document.activeElement;
   focusables = Array.from(modal.querySelectorAll(focusableSelector));
   focusables[0]?.focus();
   showModal();
+  // injectDataIntoHTMLModale(allData); A décommenter dès HTML fini
 }
 
 function closeModal() {
@@ -56,7 +58,18 @@ function handleKeyDown(e) {
     e.preventDefault();
   }
 }
+function injectDataIntoHTMLModale(data) {
+  const galleryHTML = document.getElementById('modal-gallery'); // Sélectionne la galerie
+  galleryHTML.innerHTML = ''; // Vide la galerie avant d'ajouter de nouveaux éléments
 
+  data.forEach(work => {
+      const imgHTML = document.createElement('img');
+
+      imgHTML.src = work.imageUrl;
+      imgHTML.alt = work.title;
+      galleryHTML.appendChild(imgHTML);
+  });
+}
 async function addWork(event) {
   event.preventDefault();
   const form = new FormData(document.getElementById("formAddWork"));

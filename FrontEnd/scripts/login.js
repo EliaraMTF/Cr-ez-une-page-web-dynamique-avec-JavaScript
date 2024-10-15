@@ -29,7 +29,6 @@ let boutonLogin = element.submit.addEventListener("click", (a) => {
         if (data.message || data.error) { // Vérifie s'il y a un message ou une erreur dans les données reçues
             alert("Erreur dans l\'identifiant ou le mot de passe");  // Affiche une alerte en cas d'erreur d'identifiant ou de mot de passe
         } else {
-            sessionStorage.setItem("isConnected", JSON.stringify(true)); // Si la connexion est réussie, enregistre l'état de connexion dans le stockage de session
             window.location.replace("index.html"); // Redirige l'utilisateur vers la page d'accueil ou une autre page protégée
         }
     })
