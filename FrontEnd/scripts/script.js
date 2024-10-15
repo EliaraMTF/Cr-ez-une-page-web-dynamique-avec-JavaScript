@@ -115,25 +115,38 @@ function addActiveClassToButtons() {
 }
 
 function checkToken() {
-    // vérifier la préscence du Token dans la session storage
+    // Vérifier la présence du Token dans la sessionStorage
     const tokenStorage = sessionStorage.getItem("Token");
-    if (tokenStorage) { 
-        // afficher bouton modifier
-        // Faire la liaison avant HTML classList.remove("hide");
-        // changer le mot login en logout
+    console.log(tokenStorage);
+    if (tokenStorage) {
+        // Afficher le bouton modifier
+        document.getElementById('edit-works').classList.remove('hide');
+
+        // Changer le texte du lien "login" en "logout"
+        const loginLink = document.getElementById('Log');
+        loginLink.textContent = 'logout';
+
+        // Modifier l'attribut href pour pointer vers la fonction de déconnexion
+        loginLink.href = '#';
+        loginLink.onclick = logout; // Associer l'événement de clic à la déconnexion
+    } else {
+        document.getElementById('edit-works').classList.add('hide');
     }
 }
 
 function logout() {
-    // Effacer Token dans le storage
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    // Changer logout en login
+    // Effacer le Token du localStorage et sessionStorage
+    localStorage.removeItem("Token");
+    sessionStorage.removeItem("Token");
 
+    // Changer le texte du lien "logout" en "login"
+    const loginLink = document.getElementById('Log');
+    loginLink.textContent = 'login';
+    // Masquer le bouton modifier
+    document.getElementById('edit-works').classList.add('hide');
 }
-
 
 // Appeler les fonctions qui récupèrent les données de l'API 
 fetchData();
 fetchCategories();
-checkToken();
+checkToken()
