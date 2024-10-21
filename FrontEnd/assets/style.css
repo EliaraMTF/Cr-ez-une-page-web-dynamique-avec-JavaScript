@@ -193,8 +193,6 @@ li:hover {
 	color: white;
 	border-color: #1d6154;
   }
-  
-
 .gallery {
 	width: 100%;
 	display: grid;
@@ -366,6 +364,23 @@ footer nav ul {
 	padding-top: 40px;
 	padding-bottom: 36px;
   }
+  #modale-gallery div {
+	position: relative;
+  }
+
+  #modal-gallery img {
+	width: 100%;
+  }
+
+  #trashCan {
+	position: absolute; 
+	left: 164px; 
+	bottom: 272px;
+	color: white;
+	background-color: black;
+	padding: 3px;
+	border-radius: 2px;
+}
   
   .js-modal-close {
 	position: absolute;
@@ -388,7 +403,7 @@ footer nav ul {
 	color: #333;
 	cursor: pointer;
   }
-  
+
   .modal-content {
 	display: grid;
 	justify-content: center;

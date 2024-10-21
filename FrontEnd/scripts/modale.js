@@ -29,7 +29,7 @@ function openModal(e) {
   focusables = Array.from(modal.querySelectorAll(focusableSelector));
   focusables[0]?.focus();
   showModal();
-  // injectDataIntoHTMLModale(allData); A décommenter dès HTML fini
+  // injectDataIntoHTMLModale(allData);
 }
 
 function closeModal() {
@@ -68,6 +68,27 @@ function injectDataIntoHTMLModale(data) {
       imgHTML.src = work.imageUrl;
       imgHTML.alt = work.title;
       galleryHTML.appendChild(imgHTML);
+
+      const itemContainer = document.createElement('div');
+      itemContainer.style.position = 'relative';
+
+      // const trashIcon = document.createElement('i');
+      // trashIcon.className = 'fa-regular fa-trash-can';
+      // trashIcon.id = 'trashCan';
+      // trashIcon.style.position = 'absolute'; // Positionnement absolu pour l'icône
+      // trashIcon.style.left = '164px'; // Ajuste la position verticale
+      // trashIcon.style.bottom = '272px'; // Ajuste la position horizontale
+      // trashIcon.style.color = 'white'; // Couleur de l'icône
+      // trashIcon.style.backgroundColor = 'black'; // Couleur de fond de l'icône
+      // trashIcon.style.borderRadius = '2px'; // Arrondir le fond si besoin
+      // trashIcon.style.padding = '3px'; // Ajoute un peu d'espace autour de l'icône
+
+      // // Ajoute l'image et l'icône au conteneur
+      // itemContainer.appendChild(imgHTML);
+      // itemContainer.appendChild(trashIcon);
+
+      // // Ajoute le conteneur à la galerie
+      // galleryHTML.appendChild(itemContainer);
   });
 }
 async function addWork(event) {
