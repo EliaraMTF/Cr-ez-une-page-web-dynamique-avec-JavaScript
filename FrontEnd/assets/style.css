@@ -372,9 +372,9 @@ footer nav ul {
 	width: 100%;
   }
 
-  #trashCan {
+  #modal-gallery.trashCan {
 	position: absolute; 
-	left: 164px; 
+	top: 5px; 
 	bottom: 272px;
 	color: white;
 	background-color: black;
@@ -470,11 +470,11 @@ footer nav ul {
   #addWorkButton {
 	display: block;
 	margin-left: auto;
-	margin-right: auto;
+	margin-right: 78px;
 	font-family: "Syne";
 	font-size: 14px;
 	font-weight: 700;
-	background-color: #a7a7a7;
+	background-color: #1d6154;
 	color: white;
 	border-radius: 60px;
 	width: 237px;

@@ -117,7 +117,6 @@ function addActiveClassToButtons() {
 function checkToken() {
     // Vérifier la présence du Token dans la sessionStorage
     const tokenStorage = sessionStorage.getItem("Token");
-    console.log(tokenStorage);
     if (tokenStorage) {
         // Afficher le bouton modifier
         document.getElementById('edit-works').classList.remove('hide');

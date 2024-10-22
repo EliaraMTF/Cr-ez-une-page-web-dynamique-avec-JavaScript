@@ -60,7 +60,7 @@ function handleKeyDown(e) {
 }
 let isGalleryLoaded = false;  // Variable pour vérifier si la galerie est déjà chargée
 
-function injectDataIntoHTMLModale(data) {
+async function injectDataIntoHTMLModale(data) {
   const galleryHTML = document.getElementById('modal-gallery'); // Sélectionne la galerie dans la modale
   const mainGallery = document.getElementById('gallery'); // Sélectionne la galerie sur la page de base
 
@@ -110,11 +110,25 @@ function injectDataIntoHTMLModale(data) {
       mainGallery.appendChild(imgMainGallery);
 
       trashIconModale.addEventListener('click', function() {
-        imageContainerModale.remove();
-        const correspondingMainImage = document.getElementById(`main-photo-${index}`);
-        if (correspondingMainImage) {
-          correspondingMainImage.remove();
+        // suppresion de l'image coter API 
+        const deleteImage =  fetch (`http://localhost:5678/api/works/${work.id}`, {
+          method: "DELETE",
+          headers: {Authorization: `Bearer ${sessionStorage.getItem("Token")}` },
+        });
+        console.log(deleteImage);
+        if (deleteImage.status !== 201) {
+          alert('Error')
         }
+        if (deleteImage.status === 201) {
+          alert('Image supprimé');
+          // La suppresion c'est bien faite
+          // imageContainerModale.remove();
+          // const correspondingMainImage = document.getElementById(`main-photo-${index}`);
+          // if (correspondingMainImage) {
+          //   correspondingMainImage.remove();
+          // }
+        }
+        
       });
   });
 
