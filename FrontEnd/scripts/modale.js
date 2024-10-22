@@ -29,7 +29,7 @@ function openModal(e) {
   focusables = Array.from(modal.querySelectorAll(focusableSelector));
   focusables[0]?.focus();
   showModal();
-  // injectDataIntoHTMLModale(allData);
+  injectDataIntoHTMLModale(allData);
 }
 
 function closeModal() {
@@ -58,39 +58,175 @@ function handleKeyDown(e) {
     e.preventDefault();
   }
 }
+let isGalleryLoaded = false;  // Variable pour vérifier si la galerie est déjà chargée
+
 function injectDataIntoHTMLModale(data) {
-  const galleryHTML = document.getElementById('modal-gallery'); // Sélectionne la galerie
-  galleryHTML.innerHTML = ''; // Vide la galerie avant d'ajouter de nouveaux éléments
+  const galleryHTML = document.getElementById('modal-gallery'); // Sélectionne la galerie dans la modale
+  const mainGallery = document.getElementById('gallery'); // Sélectionne la galerie sur la page de base
 
-  data.forEach(work => {
-      const imgHTML = document.createElement('img');
+  // Vérifie si les images sont déjà chargées
+  if (isGalleryLoaded) {
+    return;  // Si oui, ne fait rien
+  }
 
-      imgHTML.src = work.imageUrl;
-      imgHTML.alt = work.title;
-      galleryHTML.appendChild(imgHTML);
+  // Vide les galeries avant d'ajouter des images (une seule fois)
+  galleryHTML.innerHTML = ''; 
+  mainGallery.innerHTML = ''; 
 
-      const itemContainer = document.createElement('div');
-      itemContainer.style.position = 'relative';
+  data.forEach((work, index) => {
+      // Création des conteneurs et images comme dans le code précédent
+      const imageContainerModale = document.createElement('div');
+      imageContainerModale.classList.add('image-container');
+      imageContainerModale.id = `modale-container-${index}`;
 
-      // const trashIcon = document.createElement('i');
-      // trashIcon.className = 'fa-regular fa-trash-can';
-      // trashIcon.id = 'trashCan';
-      // trashIcon.style.position = 'absolute'; // Positionnement absolu pour l'icône
-      // trashIcon.style.left = '164px'; // Ajuste la position verticale
-      // trashIcon.style.bottom = '272px'; // Ajuste la position horizontale
-      // trashIcon.style.color = 'white'; // Couleur de l'icône
-      // trashIcon.style.backgroundColor = 'black'; // Couleur de fond de l'icône
-      // trashIcon.style.borderRadius = '2px'; // Arrondir le fond si besoin
-      // trashIcon.style.padding = '3px'; // Ajoute un peu d'espace autour de l'icône
+      const imgModale = document.createElement('img');
+      imgModale.src = work.imageUrl;
+      imgModale.alt = work.title;
+      imgModale.classList.add('photo');
+      imgModale.id = `modale-photo-${index}`;
 
-      // // Ajoute l'image et l'icône au conteneur
-      // itemContainer.appendChild(imgHTML);
-      // itemContainer.appendChild(trashIcon);
+      const trashIconModale = document.createElement('i');
+      trashIconModale.classList.add('fa-regular', 'fa-trash-can', 'trash-icon');
+      trashIconModale.id = `modale-trash-${index}`;
 
-      // // Ajoute le conteneur à la galerie
-      // galleryHTML.appendChild(itemContainer);
+      trashIconModale.style.fontWeight = '400';
+      trashIconModale.style.position = 'absolute';
+      trashIconModale.style.top = '5px';
+      trashIconModale.style.right = '5px';
+      trashIconModale.style.color = 'white';
+      trashIconModale.style.backgroundColor = 'black';
+      trashIconModale.style.padding = '3px';
+      trashIconModale.style.borderRadius = '2px';
+
+      imageContainerModale.appendChild(imgModale);
+      imageContainerModale.appendChild(trashIconModale);
+      galleryHTML.appendChild(imageContainerModale);
+
+      const imgMainGallery = document.createElement('img');
+      imgMainGallery.src = work.imageUrl;
+      imgMainGallery.alt = work.title;
+      imgMainGallery.classList.add('photo');
+      imgMainGallery.id = `main-photo-${index}`;
+      mainGallery.appendChild(imgMainGallery);
+
+      trashIconModale.addEventListener('click', function() {
+        imageContainerModale.remove();
+        const correspondingMainImage = document.getElementById(`main-photo-${index}`);
+        if (correspondingMainImage) {
+          correspondingMainImage.remove();
+        }
+      });
+  });
+
+  // Marque la galerie comme chargée
+  isGalleryLoaded = true;
+}
+
+function displayWorksInModal() {
+  // Sélectionner l'élément modal où les travaux seront affichés
+  const modalGallery = document.getElementById('modal-gallery');
+  modalGallery.innerHTML = '';  // Vider la galerie de la modale avant de la remplir
+
+  // Créer un formulaire pour ajouter un nouveau travail
+  const formAddWork = document.createElement('form');
+  formAddWork.id = 'formAddWork';
+
+  // Conteneur pour l'ajout de photo
+  const containerAddPhoto = document.createElement('div');
+  containerAddPhoto.classList.add('containerAddPhoto');
+
+  // Icône d'ajout de photo
+  const iconAddPhoto = document.createElement('i');
+  iconAddPhoto.classList.add('fa-regular', 'fa-image');
+  containerAddPhoto.appendChild(iconAddPhoto);
+
+  // Label pour ajouter une photo
+  const labelFile = document.createElement('label');
+  labelFile.classList.add('labelFile');
+  labelFile.setAttribute('for', 'file');
+  labelFile.innerText = '+ Ajouter photo';
+  containerAddPhoto.appendChild(labelFile);
+
+  // Message sur les formats acceptés
+  const fileInfo = document.createElement('p');
+  fileInfo.innerText = 'jpg, png : 4mo max';
+  containerAddPhoto.appendChild(fileInfo);
+
+  // Champ d'input pour choisir une image
+  const inputFile = document.createElement('input');
+  inputFile.type = 'file';
+  inputFile.name = 'image';
+  inputFile.id = 'file';
+  inputFile.accept = 'image/jpg, image/png';
+  inputFile.required = true;
+  inputFile.style.display = 'none';
+  containerAddPhoto.appendChild(inputFile);
+
+  // Image pour prévisualisation
+  const previewImage = document.createElement('img');
+  previewImage.id = 'previewImage';
+  previewImage.src = '#';
+  previewImage.alt = 'Aperçu de l\'image';
+  previewImage.style.display = 'none';
+  containerAddPhoto.appendChild(previewImage);
+
+  // Ajouter le conteneur de photo au formulaire
+  formAddWork.appendChild(containerAddPhoto);
+
+  // Titre du travail
+  const labelTitle = document.createElement('label');
+  labelTitle.setAttribute('for', 'title');
+  labelTitle.innerText = 'Titre';
+  formAddWork.appendChild(labelTitle);
+
+  const inputTitle = document.createElement('input');
+  inputTitle.type = 'text';
+  inputTitle.name = 'title';
+  inputTitle.id = 'title';
+  inputTitle.required = true;
+  formAddWork.appendChild(inputTitle);
+
+  // Catégorie du travail
+  const labelCategory = document.createElement('label');
+  labelCategory.setAttribute('for', 'categoryInput');
+  labelCategory.innerText = 'Catégorie';
+  formAddWork.appendChild(labelCategory);
+
+  const selectCategory = document.createElement('select');
+  selectCategory.id = 'categoryInput';
+  selectCategory.name = 'category';
+  selectCategory.required = true;
+  formAddWork.appendChild(selectCategory);
+
+  // Ligne de séparation
+  const borderLine = document.createElement('div');
+  borderLine.classList.add('border-line');
+  formAddWork.appendChild(borderLine);
+
+  // Bouton de validation
+  const submitButton = document.createElement('button');
+  submitButton.type = 'submit';
+  submitButton.id = 'addWorkButton';
+  submitButton.innerText = 'Valider';
+  formAddWork.appendChild(submitButton);
+
+  // Ajouter le formulaire à la modale
+  modalGallery.appendChild(formAddWork);
+
+  // Gestion de l'affichage de la prévisualisation d'image
+  inputFile.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              previewImage.src = e.target.result;
+              previewImage.style.display = 'block';  // Afficher l'aperçu une fois l'image chargée
+          };
+          reader.readAsDataURL(file);
+      }
   });
 }
+
 async function addWork(event) {
   event.preventDefault();
   const form = new FormData(document.getElementById("formAddWork"));
