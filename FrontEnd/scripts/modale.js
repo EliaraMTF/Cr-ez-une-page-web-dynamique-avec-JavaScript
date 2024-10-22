@@ -237,6 +237,7 @@ async function addWork(event) {
       headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     });
     await displayWorksInModal();
+    loadCategories();
     closeModal();
   } catch (error) {
     console.error("Erreur:", error);
