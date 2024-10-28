@@ -56,10 +56,9 @@
 				<!-- Galerie gérée par JavaScript -->
 			</div>
 
-
 			<!-- Modale galerie -->
-			<section class="modal" id="modalGallery" aria-hidden="true" style="display: none;">
-				<div class="modal-wrapper js-modal-stop">
+			<section class="modal show" id="modalGallery" aria-hidden="true">
+				<div class="modal-wrapper js-modal-stop" id="ModaleBase">
 					<button class="js-modal-close"><i class="fa-solid fa-xmark"></i></button>
 					<!-- Contenu de la modale -->
 					<h3>Galerie photo</h3>
@@ -74,12 +73,7 @@
 					<button type="button" id="addPhotoButton">Ajouter une photo</button>
 
 				</div>
-			</section>
-			<!-- Fin de la modale galerie -->
-
-			<!-- Modale ajout travail -->
-			<section class="modal" id="modalAddWork" aria-hidden="true" style="display: none;">
-				<div class="modal-wrapper js-modal-stop">
+				<div class="modal-wrapper hide" id="modaleAddWork" >
 					<button class="js-modal-back"><i class="fa-solid fa-arrow-left"></i></i></button>
 					<button class="js-modal-close"><i class="fa-solid fa-xmark"></i></button>
 
@@ -90,9 +84,7 @@
 							<i class="fa-regular fa-image"></i>
 							<label for="file" class="labelFile">+ Ajouter photo</label>
 							<p>jpg, png : 4mo max</p>
-							<input type="file" name="image" id="file" accept="image/jpg, image/png" required
-								style="display: none;">
-							<img id="previewImage" src="#" alt="Aperçu de l'image" style="display: none;">
+							<input type="file" name="image" id="file" accept="image/jpg, image/png" required>
 						</div>
 						<label for="title">Titre</label>
 						<input type="text" name="title" id="title" required>
@@ -104,7 +96,7 @@
 
 				</div>
 			</section>
-			<!-- Fin de la modale ajout travail -->
+			<!-- Fin de la modale  -->
 
 		</section>
 		<section id="contact">

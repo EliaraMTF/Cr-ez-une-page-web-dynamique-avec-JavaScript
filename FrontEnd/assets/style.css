@@ -324,7 +324,6 @@ footer nav ul {
   #edit-works i {
 	font-size: 15px;
   }
-  
   #edit-works.hide {
 	display: none;
   }
@@ -508,6 +507,10 @@ footer nav ul {
 	flex-direction: column;
 	gap: 10px;
   }
+  #portfolio #modaleGallery #modaleAddWork.hide {
+	display: none !important;
+	background-color: red !important;
+  }
   
   #formAddWork input[type="text"],
   #formAddWork select {
@@ -526,7 +529,10 @@ footer nav ul {
   }
   
   #previewImage {
-	max-height: 160px;
+	max-width: 129px;
+	max-height: 193px;
+	top: 774px;
+	left: 665px;
   }
   
   .labelFile {

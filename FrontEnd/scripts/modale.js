@@ -16,8 +16,13 @@ function setupModals() {
   const addPhotoButton = document.getElementById("addPhotoButton");
   const backButton = document.querySelector(".js-modal-back");
 
-  addPhotoButton?.addEventListener("click", addWork);
+  //addPhotoButton?.addEventListener("click", addWork);
+  addPhotoButton?.addEventListener("click", displayModale2);
   // backButton?.addEventListener("click", backToGalleryModal); faire la fonction backToGalleryModal
+}
+
+function displayModale2() {
+
 }
 
 function openModal(e) {
@@ -33,7 +38,7 @@ function openModal(e) {
 }
 
 function closeModal() {
-  modal.style.display = "none";
+  // modal.style.display = "none";
   modal.setAttribute("aria-hidden", "true");
   document.removeEventListener("keydown", handleKeyDown);
   modal = null;
@@ -41,13 +46,13 @@ function closeModal() {
 }
 
 function showModal() {
-  modal.style.display = "flex";
-  modal.setAttribute("aria-hidden", "false");
-  modal.setAttribute("aria-modal", "true");
-  document.addEventListener("keydown", handleKeyDown);
-  modal.querySelector(".js-modal-close")?.addEventListener("click", closeModal);
-  modal.addEventListener("click", closeModal);
-  modal.querySelector(".modal-wrapper")?.addEventListener("click", (e) => e.stopPropagation());
+  // modal.style.display = "flex";
+  // modal.setAttribute("aria-hidden", "false");
+  // modal.setAttribute("aria-modal", "true");
+  // document.addEventListener("keydown", handleKeyDown);
+  // modal.querySelector(".js-modal-close")?.addEventListener("click", closeModal);
+  // modal.addEventListener("click", closeModal);
+  // modal.querySelector(".modal-wrapper")?.addEventListener("click", (e) => e.stopPropagation());
 }
 
 function handleKeyDown(e) {
@@ -58,23 +63,21 @@ function handleKeyDown(e) {
     e.preventDefault();
   }
 }
+
 let isGalleryLoaded = false;  // Variable pour vérifier si la galerie est déjà chargée
 
-async function injectDataIntoHTMLModale(data) {
-  const galleryHTML = document.getElementById('modal-gallery'); // Sélectionne la galerie dans la modale
-  const mainGallery = document.getElementById('gallery'); // Sélectionne la galerie sur la page de base
+function injectDataIntoHTMLModale(data) {
+  const galleryHTML = document.getElementById('modal-gallery');
+  const mainGallery = document.getElementById('gallery');
 
-  // Vérifie si les images sont déjà chargées
   if (isGalleryLoaded) {
-    return;  // Si oui, ne fait rien
+    return;
   }
 
-  // Vide les galeries avant d'ajouter des images (une seule fois)
   galleryHTML.innerHTML = ''; 
   mainGallery.innerHTML = ''; 
 
   data.forEach((work, index) => {
-      // Création des conteneurs et images comme dans le code précédent
       const imageContainerModale = document.createElement('div');
       imageContainerModale.classList.add('image-container');
       imageContainerModale.id = `modale-container-${index}`;
@@ -88,7 +91,7 @@ async function injectDataIntoHTMLModale(data) {
       const trashIconModale = document.createElement('i');
       trashIconModale.classList.add('fa-regular', 'fa-trash-can', 'trash-icon');
       trashIconModale.id = `modale-trash-${index}`;
-
+      
       trashIconModale.style.fontWeight = '400';
       trashIconModale.style.position = 'absolute';
       trashIconModale.style.top = '5px';
@@ -97,6 +100,12 @@ async function injectDataIntoHTMLModale(data) {
       trashIconModale.style.backgroundColor = 'black';
       trashIconModale.style.padding = '3px';
       trashIconModale.style.borderRadius = '2px';
+
+      // Ajouter un écouteur de clic pour supprimer le travail
+      trashIconModale.addEventListener('click', (event) => {
+        event.preventDefault(); // Empêche le rechargement de la page
+        deleteWorkInModale(work, imageContainerModale, index);
+      });
 
       imageContainerModale.appendChild(imgModale);
       imageContainerModale.appendChild(trashIconModale);
@@ -108,32 +117,41 @@ async function injectDataIntoHTMLModale(data) {
       imgMainGallery.classList.add('photo');
       imgMainGallery.id = `main-photo-${index}`;
       mainGallery.appendChild(imgMainGallery);
-
-      trashIconModale.addEventListener('click', function() {
-        // suppresion de l'image coter API 
-        const deleteImage =  fetch (`http://localhost:5678/api/works/${work.id}`, {
-          method: "DELETE",
-          headers: {Authorization: `Bearer ${sessionStorage.getItem("Token")}` },
-        });
-        console.log(deleteImage);
-        if (deleteImage.status !== 201) {
-          alert('Error')
-        }
-        if (deleteImage.status === 201) {
-          alert('Image supprimé');
-          // La suppresion c'est bien faite
-          // imageContainerModale.remove();
-          // const correspondingMainImage = document.getElementById(`main-photo-${index}`);
-          // if (correspondingMainImage) {
-          //   correspondingMainImage.remove();
-          // }
-        }
-        
-      });
   });
 
-  // Marque la galerie comme chargée
   isGalleryLoaded = true;
+}
+
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  notification.innerText = message;
+  notification.style.display = 'block';
+  
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000); // Masquer le message après 3 secondes
+}
+
+async function deleteWorkInModale(work, imageContainerModale, index) {
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${work.id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${sessionStorage.getItem("Token")}` },
+    });
+
+    if (response.status === 204) {
+      imageContainerModale.remove();
+      const correspondingMainImage = document.getElementById(`main-photo-${index}`);
+      if (correspondingMainImage) {
+        correspondingMainImage.remove();
+      }
+    } else {
+      alert("Erreur lors de la suppression de l'image");
+    }
+  } catch (error) {
+    console.error('Erreur réseau ou d\'authentification:', error);
+    alert('Erreur réseau ou d\'authentification');
+  }
 }
 
 function displayWorksInModal() {
@@ -243,19 +261,32 @@ function displayWorksInModal() {
 
 async function addWork(event) {
   event.preventDefault();
-  const form = new FormData(document.getElementById("formAddWork"));
-  try {
-    await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      body: form,
-      headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
-    });
-    await displayWorksInModal();
-    loadCategories();
-    closeModal();
-  } catch (error) {
-    console.error("Erreur:", error);
-  }
+  console.log('addWork');
+  const titleValue = document.getElementById('title').value;
+  console.log(titleValue);
+  // const formData = new FormData();
+  // formData.append('title', )
+  // try {
+  //   const response = await fetch("http://localhost:5678/api/works", {
+  //     method: "POST",
+  //     body: form,
+  //     headers: { 
+  //       Accept: 'application/json',
+  //       'Content-Type': 'multipart/form-data',
+  //       Authorization: `Bearer ${sessionStorage.getItem("Token")}` 
+  //     },
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(`Erreur HTTP: ${response.status}`);
+  //   }
+
+  //   await displayWorksInModal();
+  //   loadCategories();
+  //   closeModal();
+  // } catch (error) {
+  //   console.error("Erreur:", error);
+  // }
 }
 
 async function loadCategories() {
