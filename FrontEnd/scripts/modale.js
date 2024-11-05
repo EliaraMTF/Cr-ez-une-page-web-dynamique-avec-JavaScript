@@ -4,11 +4,31 @@ let focusables = [];
 let lastFocusedElement = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupModals();
-  loadCategories();
-  document.getElementById("formAddWork")?.addEventListener("submit", addWork);
-});
+setupModals();
+loadCategories();
+document.getElementById("formAddWork")?.addEventListener("submit", addWork);
 
+// Ajouter l'aperçu de l'image dans containerAddPhoto
+const fileInput = document.getElementById("file");
+fileInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const previewImage = document.createElement("img");
+      previewImage.src = e.target.result;
+      previewImage.alt = "Aperçu de l'image sélectionnée";
+      previewImage.classList.add("preview-image"); // Ajoute la classe CSS
+
+      // Récupère le conteneur et nettoie-le avant d'ajouter l'image
+      const containerAddPhoto = document.querySelector(".containerAddPhoto");
+      containerAddPhoto.innerHTML = ""; // Supprime les anciens éléments (texte + icône)
+      containerAddPhoto.appendChild(previewImage); // Ajoute l'image
+    };
+    reader.readAsDataURL(file);
+  }
+});
+});
 function setupModals() {
   const editWorksButton = document.getElementById("edit-works");
   editWorksButton?.addEventListener("click", () => {
@@ -280,17 +300,21 @@ function displayWorksInModal() {
 async function addWork(event) {
   event.preventDefault();
   console.log('addWork');
+  
+  // Récupère la valeur du titre
   const titleValue = document.getElementById('title').value;
   console.log(titleValue);
+  
+  // Prépare le FormData
   const formData = new FormData();
-  formData.append('title', title)
+  formData.append('title', titleValue);
+  
   try {
     const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
-      body: form,
+      body: formData,
       headers: { 
         Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${sessionStorage.getItem("Token")}` 
       },
     });
