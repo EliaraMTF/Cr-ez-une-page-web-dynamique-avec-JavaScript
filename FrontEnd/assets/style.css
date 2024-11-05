@@ -371,6 +371,17 @@ footer nav ul {
 	width: 100%;
   }
 
+  .trash-icon {
+	font-weight: 400;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	color: white;
+	background-color: black;
+	padding: 3px;
+	border-radius: 2px;
+  }
+
   #modal-gallery.trashCan {
 	position: absolute; 
 	top: 5px; 
@@ -507,9 +518,9 @@ footer nav ul {
 	flex-direction: column;
 	gap: 10px;
   }
-  #portfolio #modaleGallery #modaleAddWork.hide {
-	display: none !important;
-	background-color: red !important;
+  
+  .hide {
+	display: none;
   }
   
   #formAddWork input[type="text"],

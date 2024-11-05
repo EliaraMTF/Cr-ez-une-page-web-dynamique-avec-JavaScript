@@ -11,50 +11,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setupModals() {
   const editWorksButton = document.getElementById("edit-works");
-  editWorksButton?.addEventListener("click", openModal);
+  editWorksButton?.addEventListener("click", () => {
+    openModal();
+    showGalleryModalSection();  // Affiche la galerie photo par défaut
+  });
 
   const addPhotoButton = document.getElementById("addPhotoButton");
+  addPhotoButton?.addEventListener("click", showAddPhotoModalSection);  // Passe à la modale d'ajout photo
+
   const backButton = document.querySelector(".js-modal-back");
-
-  //addPhotoButton?.addEventListener("click", addWork);
-  addPhotoButton?.addEventListener("click", displayModale2);
-  // backButton?.addEventListener("click", backToGalleryModal); faire la fonction backToGalleryModal
-}
-
-function displayModale2() {
-
+  backButton?.addEventListener("click", showGalleryModalSection);  // Retour à la galerie photo
 }
 
 function openModal(e) {
-  e.preventDefault();
-  console.log('data', allData);
+  e?.preventDefault();
   modal = document.getElementById("modalGallery");
   if (!modal) return;
   lastFocusedElement = document.activeElement;
   focusables = Array.from(modal.querySelectorAll(focusableSelector));
   focusables[0]?.focus();
   showModal();
-  injectDataIntoHTMLModale(allData);
+  injectDataIntoHTMLModale(allData); // Charger les données de la galerie
+}
+
+function showModal() {
+  modal.style.display = "flex";
+  modal.setAttribute("aria-hidden", "false");
+  modal.setAttribute("aria-modal", "true");
+  document.addEventListener("keydown", handleKeyDown);
+  modal.querySelector(".js-modal-close")?.addEventListener("click", closeModal);
+  modal.addEventListener("click", closeModal);
+  modal.querySelector(".modal-wrapper")?.addEventListener("click", (e) => e.stopPropagation());
 }
 
 function closeModal() {
-  // modal.style.display = "none";
+  modal.style.display = "none"; // Ajouter cette ligne pour masquer la modale
   modal.setAttribute("aria-hidden", "true");
   document.removeEventListener("keydown", handleKeyDown);
   modal = null;
   lastFocusedElement?.focus();
 }
 
-function showModal() {
-  // modal.style.display = "flex";
-  // modal.setAttribute("aria-hidden", "false");
-  // modal.setAttribute("aria-modal", "true");
-  // document.addEventListener("keydown", handleKeyDown);
-  // modal.querySelector(".js-modal-close")?.addEventListener("click", closeModal);
-  // modal.addEventListener("click", closeModal);
-  // modal.querySelector(".modal-wrapper")?.addEventListener("click", (e) => e.stopPropagation());
+// Fonction pour afficher la section de la galerie
+function showGalleryModalSection() {
+  document.getElementById("ModaleBase").classList.add("show");
+  document.getElementById("ModaleBase").classList.remove("hide");
+  document.getElementById("modaleAddWork").classList.add("hide");
+  document.getElementById("modaleAddWork").classList.remove("show");
 }
 
+// Fonction pour afficher la section d'ajout de photo
+function showAddPhotoModalSection() {
+  document.getElementById("ModaleBase").classList.add("hide");
+  document.getElementById("ModaleBase").classList.remove("show");
+  document.getElementById("modaleAddWork").classList.add("show");
+  document.getElementById("modaleAddWork").classList.remove("hide");
+}
+
+// Fonction pour gérer les touches du clavier
 function handleKeyDown(e) {
   if (e.key === "Escape") closeModal();
   if (e.key === "Tab") {
@@ -63,6 +77,32 @@ function handleKeyDown(e) {
     e.preventDefault();
   }
 }
+
+// Fonction pour charger les catégories (inchangée)
+async function loadCategories() {
+  const categorySelect = document.getElementById("categoryInput");
+  const response = await fetch("http://localhost:5678/api/categories");
+  const categories = await response.json();
+  categorySelect.innerHTML = `<option value="">Choisissez une catégorie</option>`;
+  categories.forEach(({ id, name }) => {
+    categorySelect.innerHTML += `<option value="${id}">${name}</option>`;
+  });
+}
+
+// Fonction injectant les données de la galerie (inchangée)
+function injectDataIntoHTMLModale(data) {
+  // Ton code existant pour injecter les images dans la modale
+}
+
+// Fonction pour ajouter un travail (inchangée)
+async function addWork(event) {
+  event.preventDefault();
+  console.log('addWork');
+  const titleValue = document.getElementById('title').value;
+  console.log(titleValue);
+  // Suite du code d'ajout de travail
+}
+
 
 let isGalleryLoaded = false;  // Variable pour vérifier si la galerie est déjà chargée
 
@@ -91,15 +131,6 @@ function injectDataIntoHTMLModale(data) {
       const trashIconModale = document.createElement('i');
       trashIconModale.classList.add('fa-regular', 'fa-trash-can', 'trash-icon');
       trashIconModale.id = `modale-trash-${index}`;
-      
-      trashIconModale.style.fontWeight = '400';
-      trashIconModale.style.position = 'absolute';
-      trashIconModale.style.top = '5px';
-      trashIconModale.style.right = '5px';
-      trashIconModale.style.color = 'white';
-      trashIconModale.style.backgroundColor = 'black';
-      trashIconModale.style.padding = '3px';
-      trashIconModale.style.borderRadius = '2px';
 
       // Ajouter un écouteur de clic pour supprimer le travail
       trashIconModale.addEventListener('click', (event) => {
@@ -154,108 +185,90 @@ async function deleteWorkInModale(work, imageContainerModale, index) {
   }
 }
 
+function createElement(tag, options = {}) {
+  const element = document.createElement(tag);
+  Object.assign(element, options);
+  if (options.classes) element.classList.add(...options.classes);
+  if (options.attributes) {
+    Object.entries(options.attributes).forEach(([key, value]) =>
+      element.setAttribute(key, value)
+    );
+  }
+  return element;
+}
+
 function displayWorksInModal() {
-  // Sélectionner l'élément modal où les travaux seront affichés
   const modalGallery = document.getElementById('modal-gallery');
-  modalGallery.innerHTML = '';  // Vider la galerie de la modale avant de la remplir
+  modalGallery.innerHTML = ''; 
 
-  // Créer un formulaire pour ajouter un nouveau travail
-  const formAddWork = document.createElement('form');
-  formAddWork.id = 'formAddWork';
+  const formAddWork = createElement('form', { id: 'formAddWork' });
 
-  // Conteneur pour l'ajout de photo
-  const containerAddPhoto = document.createElement('div');
-  containerAddPhoto.classList.add('containerAddPhoto');
+  const containerAddPhoto = createElement('div', { classes: ['containerAddPhoto'] });
+  containerAddPhoto.append(
+    createElement('i', { classes: ['fa-regular', 'fa-image'] }),
+    createElement('label', { 
+      classes: ['labelFile'], 
+      attributes: { for: 'file' }, 
+      innerText: '+ Ajouter photo' 
+    }),
+    createElement('p', { innerText: 'jpg, png : 4mo max' }),
+    createElement('input', { 
+      type: 'file', 
+      name: 'image', 
+      id: 'file', 
+      style: { display: 'none' }, 
+      required: true, 
+      accept: 'image/jpg, image/png' 
+    }),
+    createElement('img', { 
+      id: 'previewImage', 
+      src: '#', 
+      alt: "Aperçu de l'image", 
+      style: { display: 'none' } 
+    })
+  );
 
-  // Icône d'ajout de photo
-  const iconAddPhoto = document.createElement('i');
-  iconAddPhoto.classList.add('fa-regular', 'fa-image');
-  containerAddPhoto.appendChild(iconAddPhoto);
+  const inputTitle = createElement('input', { 
+    type: 'text', 
+    name: 'title', 
+    id: 'title', 
+    required: true 
+  });
 
-  // Label pour ajouter une photo
-  const labelFile = document.createElement('label');
-  labelFile.classList.add('labelFile');
-  labelFile.setAttribute('for', 'file');
-  labelFile.innerText = '+ Ajouter photo';
-  containerAddPhoto.appendChild(labelFile);
+  const selectCategory = createElement('select', { 
+    id: 'categoryInput', 
+    name: 'category', 
+    required: true 
+  });
 
-  // Message sur les formats acceptés
-  const fileInfo = document.createElement('p');
-  fileInfo.innerText = 'jpg, png : 4mo max';
-  containerAddPhoto.appendChild(fileInfo);
+  formAddWork.append(
+    containerAddPhoto,
+    createElement('label', { attributes: { for: 'title' }, innerText: 'Titre' }),
+    inputTitle,
+    createElement('label', { attributes: { for: 'categoryInput' }, innerText: 'Catégorie' }),
+    selectCategory,
+    createElement('div', { classes: ['border-line'] }),
+    createElement('button', { 
+      type: 'submit', 
+      id: 'addWorkButton', 
+      innerText: 'Valider' 
+    })
+  );
 
-  // Champ d'input pour choisir une image
-  const inputFile = document.createElement('input');
-  inputFile.type = 'file';
-  inputFile.name = 'image';
-  inputFile.id = 'file';
-  inputFile.accept = 'image/jpg, image/png';
-  inputFile.required = true;
-  inputFile.style.display = 'none';
-  containerAddPhoto.appendChild(inputFile);
-
-  // Image pour prévisualisation
-  const previewImage = document.createElement('img');
-  previewImage.id = 'previewImage';
-  previewImage.src = '#';
-  previewImage.alt = 'Aperçu de l\'image';
-  previewImage.style.display = 'none';
-  containerAddPhoto.appendChild(previewImage);
-
-  // Ajouter le conteneur de photo au formulaire
-  formAddWork.appendChild(containerAddPhoto);
-
-  // Titre du travail
-  const labelTitle = document.createElement('label');
-  labelTitle.setAttribute('for', 'title');
-  labelTitle.innerText = 'Titre';
-  formAddWork.appendChild(labelTitle);
-
-  const inputTitle = document.createElement('input');
-  inputTitle.type = 'text';
-  inputTitle.name = 'title';
-  inputTitle.id = 'title';
-  inputTitle.required = true;
-  formAddWork.appendChild(inputTitle);
-
-  // Catégorie du travail
-  const labelCategory = document.createElement('label');
-  labelCategory.setAttribute('for', 'categoryInput');
-  labelCategory.innerText = 'Catégorie';
-  formAddWork.appendChild(labelCategory);
-
-  const selectCategory = document.createElement('select');
-  selectCategory.id = 'categoryInput';
-  selectCategory.name = 'category';
-  selectCategory.required = true;
-  formAddWork.appendChild(selectCategory);
-
-  // Ligne de séparation
-  const borderLine = document.createElement('div');
-  borderLine.classList.add('border-line');
-  formAddWork.appendChild(borderLine);
-
-  // Bouton de validation
-  const submitButton = document.createElement('button');
-  submitButton.type = 'submit';
-  submitButton.id = 'addWorkButton';
-  submitButton.innerText = 'Valider';
-  formAddWork.appendChild(submitButton);
-
-  // Ajouter le formulaire à la modale
   modalGallery.appendChild(formAddWork);
 
-  // Gestion de l'affichage de la prévisualisation d'image
-  inputFile.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-              previewImage.src = e.target.result;
-              previewImage.style.display = 'block';  // Afficher l'aperçu une fois l'image chargée
-          };
-          reader.readAsDataURL(file);
-      }
+  // Image preview
+  formAddWork.querySelector('#file').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const previewImage = formAddWork.querySelector('#previewImage');
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
   });
 }
 
@@ -264,29 +277,29 @@ async function addWork(event) {
   console.log('addWork');
   const titleValue = document.getElementById('title').value;
   console.log(titleValue);
-  // const formData = new FormData();
-  // formData.append('title', )
-  // try {
-  //   const response = await fetch("http://localhost:5678/api/works", {
-  //     method: "POST",
-  //     body: form,
-  //     headers: { 
-  //       Accept: 'application/json',
-  //       'Content-Type': 'multipart/form-data',
-  //       Authorization: `Bearer ${sessionStorage.getItem("Token")}` 
-  //     },
-  //   });
+  const formData = new FormData();
+  formData.append('title', title)
+  try {
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      body: form,
+      headers: { 
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${sessionStorage.getItem("Token")}` 
+      },
+    });
 
-  //   if (!response.ok) {
-  //     throw new Error(`Erreur HTTP: ${response.status}`);
-  //   }
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
 
-  //   await displayWorksInModal();
-  //   loadCategories();
-  //   closeModal();
-  // } catch (error) {
-  //   console.error("Erreur:", error);
-  // }
+    await displayWorksInModal();
+    loadCategories();
+    closeModal();
+  } catch (error) {
+    console.error("Erreur:", error);
+  }
 }
 
 async function loadCategories() {
