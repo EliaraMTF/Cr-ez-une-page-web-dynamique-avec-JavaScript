@@ -39,9 +39,12 @@ function showModal() {
   modal.setAttribute("aria-hidden", "false");
   modal.setAttribute("aria-modal", "true");
   document.addEventListener("keydown", handleKeyDown);
+
+  // Ajoutez seulement l'écouteur de clic sur la croix pour fermer la modale
   modal.querySelector(".js-modal-close")?.addEventListener("click", closeModal);
-  modal.addEventListener("click", closeModal);
-  modal.querySelector(".modal-wrapper")?.addEventListener("click", (e) => e.stopPropagation());
+
+  const addPhotoModale = document.getElementById("modaleAddWork");
+  addPhotoModale.querySelector(".js-modale-close")?.addEventListener("click", closeModal);
 }
 
 function closeModal() {
@@ -66,6 +69,8 @@ function showAddPhotoModalSection() {
   document.getElementById("ModaleBase").classList.remove("show");
   document.getElementById("modaleAddWork").classList.add("show");
   document.getElementById("modaleAddWork").classList.remove("hide");
+  // Ajoute cet écouteur pour fermer la modale d'ajout de photo
+  document.querySelector(".js-modale-close")?.addEventListener("click", closeModal);
 }
 
 // Fonction pour gérer les touches du clavier
