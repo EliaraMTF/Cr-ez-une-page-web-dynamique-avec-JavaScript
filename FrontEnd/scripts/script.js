@@ -3,7 +3,6 @@ let allData = []; // Variable globale pour stocker toutes les données des image
 
 // Fonction pour récupérer les données des images
 function fetchData() {
-    console.log("fetchData");
     fetch("http://localhost:5678/api/works") // Envoie une requête GET à l'URL spécifiée.
         .then(response => {                  
             if (!response.ok) {              
@@ -13,8 +12,7 @@ function fetchData() {
         })
         .then(data => {                     
             allData = data;  // Stocker les données globalement
-            injectDataIntoHTML(data); // Injecter toutes les données initialement         
-            console.log(data);     
+            injectDataIntoHTML(data); // Injecter toutes les données initialement   
         })
         .catch(error => {                    
             console.error('Une erreur est survenue:', error);
@@ -42,7 +40,6 @@ function injectDataIntoHTML(data) {
 
 // Fonction pour récupérer les catégories à partir de l'API
 function fetchCategories() {
-    console.log("fetchCategories");
     fetch("http://localhost:5678/api/categories") 
         .then(response => { 
             if (!response.ok) { 
@@ -51,7 +48,6 @@ function fetchCategories() {
             return response.json();
         })
         .then(categories => {
-            console.log(categories); 
             displayCategories(categories); // Afficher les catégories
         })
         .catch(error => {
@@ -87,7 +83,6 @@ function displayCategories(dataCategories) {
 
 // Fonction pour filtrer les données par catégorie
 function filterByCategory(categoryName) {
-    console.log("Filtrage par catégorie:", categoryName);
 
     let filteredData;
     if (categoryName === 'Tous') {

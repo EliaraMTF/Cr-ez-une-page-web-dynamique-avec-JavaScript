@@ -4,7 +4,6 @@ const element = {
     email: document.querySelector("#email"),  // Sélectionne l'élément avec l'identifiant "email" et l'assigne à `element.email`
     submit: document.querySelector("#submitUserInfo"), // Sélectionne le bouton avec l'identifiant "submitUserInfo" et l'assigne à `element.submit`
 };
-console.log(element)
 let boutonLogin = element.submit.addEventListener("click", (a) => {
     a.preventDefault();
 
@@ -23,7 +22,6 @@ let boutonLogin = element.submit.addEventListener("click", (a) => {
     .then((response) => response.json()) // Convertit la réponse de l'API en JSON
     
     .then((data) => { // Traite les données JSON reçues de l'API
-        console.log(data);
         sessionStorage.setItem("Token", data.token); // Enregistre le token reçu dans le stockage de session du navigateur
 
         if (data.message || data.error) { // Vérifie s'il y a un message ou une erreur dans les données reçues

@@ -103,17 +103,6 @@ function handleKeyDown(e) {
   }
 }
 
-// Fonction pour charger les catégories (inchangée)
-async function loadCategories() {
-  const categorySelect = document.getElementById("categoryInput");
-  const response = await fetch("http://localhost:5678/api/categories");
-  const categories = await response.json();
-  categorySelect.innerHTML = `<option value="">Choisissez une catégorie</option>`;
-  categories.forEach(({ id, name }) => {
-    categorySelect.innerHTML += `<option value="${id}">${name}</option>`;
-  });
-}
-
 // Fonction injectant les données de la galerie (inchangée)
 function injectDataIntoHTMLModale(data) {
   // Ton code existant pour injecter les images dans la modale
@@ -122,9 +111,7 @@ function injectDataIntoHTMLModale(data) {
 // Fonction pour ajouter un travail (inchangée)
 async function addWork(event) {
   event.preventDefault();
-  console.log('addWork');
   const titleValue = document.getElementById('title').value;
-  console.log(titleValue);
   // Suite du code d'ajout de travail
 }
 
@@ -299,15 +286,23 @@ function displayWorksInModal() {
 
 async function addWork(event) {
   event.preventDefault();
-  console.log('addWork');
   
+  const imageInput = document.getElementById('file');
+  // imageInput.addEventListener("change", (event) => {
+    // const file = event.target.files[0];
+    // if (file) {
+    // }
+  // });
+
   // Récupère la valeur du titre
   const titleValue = document.getElementById('title').value;
-  console.log(titleValue);
-  
+
+  const categoryValue = document.getElementById('categoryInput').value;
   // Prépare le FormData
   const formData = new FormData();
+  formData.append('image', imageInput);
   formData.append('title', titleValue);
+  formData.append('category', categoryValue);
   
   try {
     const response = await fetch("http://localhost:5678/api/works", {
@@ -337,6 +332,6 @@ async function loadCategories() {
   const categories = await response.json();
   categorySelect.innerHTML = `<option value="">Choisissez une catégorie</option>`;
   categories.forEach(({ id, name }) => {
-    categorySelect.innerHTML += `<option value="${id}">${name}</option>`;
+    categorySelect.innerHTML += `<option value="${id}">${name}-${id}</option>`;
   });
 }
