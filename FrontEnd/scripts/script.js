@@ -139,28 +139,6 @@ function logout() {
     document.getElementById('edit-works').classList.add('hide');
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const addPhotoButton = document.getElementById("addPhotoButton");
-    const formAddWork = document.getElementById("formAddWork");
-    const modaleAddWork = document.getElementById("modaleAddWork");
-
-    // Afficher la modale au clic sur "Ajouter une photo"
-    if (addPhotoButton && modaleAddWork) {
-        addPhotoButton.addEventListener("click", () => {
-            modaleAddWork.classList.remove("hide");
-        });
-    } else {
-        console.error("Le bouton 'Ajouter une photo' ou la modale 'modaleAddWork' est introuvable.");
-    }
-
-    // Ajouter un écouteur de soumission au formulaire pour `addWork`
-    if (formAddWork) {
-        formAddWork.addEventListener("submit", addWork);
-    } else {
-        console.error("Le formulaire 'formAddWork' est introuvable.");
-    }
-});
-
 // Appeler les fonctions qui récupèrent les données de l'API 
 fetchData();
 fetchCategories();
