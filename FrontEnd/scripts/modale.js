@@ -277,24 +277,12 @@ function displayWorksInModal() {
 async function addWork(event) {
   event.preventDefault();
 
-  const imageInput = document.getElementById('file');
-  console.log("Élément imageInput trouvé:", imageInput);  // Vérification
-
-  if (!imageInput) {
-      console.error("L'élément input avec l'ID 'file' n'est pas trouvé dans le DOM");
-      return;
-  }
-
-  if (!imageInput.files || imageInput.files.length === 0) {
-      console.error("Aucun fichier sélectionné dans l'input 'file'.");
-      return;
-  }
-
+  const fileInput = document.getElementById("file");
   const titleValue = document.getElementById('title').value;
   const categoryValue = document.getElementById('categoryInput').value;
 
   const formData = new FormData();
-  formData.append('image', imageInput.files[0]);
+  formData.append('image', fileInput);
   formData.append('title', titleValue);
   formData.append('category', categoryValue);
 
