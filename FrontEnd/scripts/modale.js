@@ -277,17 +277,17 @@ function displayWorksInModal() {
 async function addWork(event) {
   event.preventDefault();
 
-  console.log("Déclenchement de addWork");
   const imageInput = document.getElementById('file');
-  console.log("Élément imageInput:", imageInput); // Ajoutez cette ligne
+  console.log("Élément imageInput trouvé:", imageInput);  // Vérification
 
   if (!imageInput) {
-    console.error("L'élément input avec l'ID 'file' n'est pas trouvé dans le DOM");
-    return;
+      console.error("L'élément input avec l'ID 'file' n'est pas trouvé dans le DOM");
+      return;
   }
-  if (!imageInput.files || !imageInput.files[0]) {
-    console.error("Aucun fichier sélectionné pour l'upload.");
-    return;
+
+  if (!imageInput.files || imageInput.files.length === 0) {
+      console.error("Aucun fichier sélectionné dans l'input 'file'.");
+      return;
   }
 
   const titleValue = document.getElementById('title').value;
@@ -299,25 +299,25 @@ async function addWork(event) {
   formData.append('category', categoryValue);
 
   try {
-    const response = await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      body: formData,
-      headers: { 
-        Accept: 'application/json',
-        Authorization: `Bearer ${sessionStorage.getItem("Token")}` 
-      },
-    });
+      const response = await fetch("http://localhost:5678/api/works", {
+          method: "POST",
+          body: formData,
+          headers: { 
+              Accept: 'application/json',
+              Authorization: `Bearer ${sessionStorage.getItem("Token")}`
+          },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
-    }
+      if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+      }
 
-    // Charge de nouveau les travaux après l'ajout
-    await displayWorksInModal();
-    loadCategories();
-    closeModal();
+      // Rechargement des travaux et fermeture de la modale après le succès
+      await displayWorksInModal();
+      loadCategories();
+      closeModal();
   } catch (error) {
-    console.error("Erreur:", error);
+      console.error("Erreur lors de l'envoi de l'image:", error);
   }
 }
 
