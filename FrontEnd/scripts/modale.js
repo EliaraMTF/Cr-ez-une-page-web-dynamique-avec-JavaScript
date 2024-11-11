@@ -28,6 +28,7 @@ fileInput.addEventListener("change", (event) => {
     reader.readAsDataURL(file);
   }
 });
+
 });
 function setupModals() {
   const editWorksButton = document.getElementById("edit-works");
@@ -91,6 +92,8 @@ function showAddPhotoModalSection() {
   document.getElementById("modaleAddWork").classList.remove("hide");
   // Ajoute cet écouteur pour fermer la modale d'ajout de photo
   document.querySelector(".js-modale-close")?.addEventListener("click", closeModal);
+
+  
 }
 
 // Fonction pour gérer les touches du clavier
@@ -102,19 +105,6 @@ function handleKeyDown(e) {
     e.preventDefault();
   }
 }
-
-// Fonction injectant les données de la galerie (inchangée)
-function injectDataIntoHTMLModale(data) {
-  // Ton code existant pour injecter les images dans la modale
-}
-
-// Fonction pour ajouter un travail (inchangée)
-async function addWork(event) {
-  event.preventDefault();
-  const titleValue = document.getElementById('title').value;
-  // Suite du code d'ajout de travail
-}
-
 
 let isGalleryLoaded = false;  // Variable pour vérifier si la galerie est déjà chargée
 
@@ -286,24 +276,28 @@ function displayWorksInModal() {
 
 async function addWork(event) {
   event.preventDefault();
-  
+
+  console.log("Déclenchement de addWork");
   const imageInput = document.getElementById('file');
-  // imageInput.addEventListener("change", (event) => {
-    // const file = event.target.files[0];
-    // if (file) {
-    // }
-  // });
+  console.log("Élément imageInput:", imageInput); // Ajoutez cette ligne
 
-  // Récupère la valeur du titre
+  if (!imageInput) {
+    console.error("L'élément input avec l'ID 'file' n'est pas trouvé dans le DOM");
+    return;
+  }
+  if (!imageInput.files || !imageInput.files[0]) {
+    console.error("Aucun fichier sélectionné pour l'upload.");
+    return;
+  }
+
   const titleValue = document.getElementById('title').value;
-
   const categoryValue = document.getElementById('categoryInput').value;
-  // Prépare le FormData
+
   const formData = new FormData();
-  formData.append('image', imageInput);
+  formData.append('image', imageInput.files[0]);
   formData.append('title', titleValue);
   formData.append('category', categoryValue);
-  
+
   try {
     const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
@@ -318,6 +312,7 @@ async function addWork(event) {
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
 
+    // Charge de nouveau les travaux après l'ajout
     await displayWorksInModal();
     loadCategories();
     closeModal();
