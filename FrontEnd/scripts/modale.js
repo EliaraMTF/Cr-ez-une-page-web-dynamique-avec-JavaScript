@@ -189,7 +189,9 @@ async function deleteWorkInModale(work, imageContainerModale, index) {
 
 function createElement(tag, options = {}) {
   const element = document.createElement(tag);
+  console.log("element", element);
   Object.assign(element, options);
+  console.log("option", options);
   if (options.classes) element.classList.add(...options.classes);
   if (options.attributes) {
     Object.entries(options.attributes).forEach(([key, value]) =>
@@ -206,6 +208,7 @@ function displayWorksInModal() {
   const formAddWork = createElement('form', { id: 'formAddWork' });
 
   const containerAddPhoto = createElement('div', { classes: ['containerAddPhoto'] });
+  console.log("addPhoto", containerAddPhoto);
   containerAddPhoto.append(
     createElement('i', { classes: ['fa-regular', 'fa-image'] }),
     createElement('label', { 
@@ -274,15 +277,22 @@ function displayWorksInModal() {
   });
 }
 
+const fileInput = document.getElementById("file");
+let image; 
+fileInput.addEventListener("change", function(){
+  if (fileInput.files.length > 0) {
+    image = fileInput.files[0];
+  }
+}) 
+
 async function addWork(event) {
   event.preventDefault();
-
-  const fileInput = document.getElementById("file");
+  
   const titleValue = document.getElementById('title').value;
   const categoryValue = document.getElementById('categoryInput').value;
 
   const formData = new FormData();
-  formData.append('image', fileInput);
+  formData.append('image', image);
   formData.append('title', titleValue);
   formData.append('category', categoryValue);
 
@@ -301,7 +311,7 @@ async function addWork(event) {
       }
 
       // Rechargement des travaux et fermeture de la modale après le succès
-      await displayWorksInModal();
+      // await displayWorksInModal();
       loadCategories();
       closeModal();
   } catch (error) {
@@ -315,6 +325,6 @@ async function loadCategories() {
   const categories = await response.json();
   categorySelect.innerHTML = `<option value="">Choisissez une catégorie</option>`;
   categories.forEach(({ id, name }) => {
-    categorySelect.innerHTML += `<option value="${id}">${name}-${id}</option>`;
+    categorySelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 }

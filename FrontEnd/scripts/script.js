@@ -112,20 +112,36 @@ function addActiveClassToButtons() {
 function checkToken() {
     // Vérifier la présence du Token dans la sessionStorage
     const tokenStorage = sessionStorage.getItem("Token");
-    if (tokenStorage) {
-        // Afficher le bouton modifier
-        document.getElementById('edit-works').classList.remove('hide');
+    
+    // Récupération des éléments nécessaires
+    const editWorks = document.getElementById('edit-works');
+    const objectCategories = document.getElementById('objectCategories');
+    const loginLink = document.getElementById('Log');
 
-        // Changer le texte du lien "login" en "logout"
-        const loginLink = document.getElementById('Log');
-        loginLink.textContent = 'logout';
-        // Modifier l'attribut href pour pointer vers la fonction de déconnexion
-        loginLink.href = '#';
-        loginLink.onclick = logout; // Associer l'événement de clic à la déconnexion
+    if (tokenStorage) {
+        // Afficher le bouton modifier si l'élément existe
+        if (editWorks) editWorks.classList.remove('hide');
+        if (objectCategories) {
+            objectCategories.classList.remove('show');
+            objectCategories.classList.add('hide');
+        }
+
+        // Changer le texte et le comportement du lien "login" en "logout"
+        if (loginLink) {
+            loginLink.textContent = 'logout';
+            loginLink.href = '#';
+            loginLink.onclick = logout; // Associer l'événement de clic à la déconnexion
+        }
     } else {
-        document.getElementById('edit-works').classList.add('hide');
+        // Masquer le bouton modifier et afficher les catégories
+        if (editWorks) editWorks.classList.add('hide');
+        if (objectCategories) {
+            objectCategories.classList.remove('hide');
+            objectCategories.classList.add('show');
+        }
     }
 }
+
 
 function logout() {
     // Effacer le Token du localStorage et sessionStorage

@@ -324,6 +324,10 @@ footer nav ul {
   #edit-works i {
 	font-size: 15px;
   }
+  #objectCategories.show {
+	display: flex;
+  }
+  #objectCategories.hide,
   #edit-works.hide {
 	display: none;
   }
