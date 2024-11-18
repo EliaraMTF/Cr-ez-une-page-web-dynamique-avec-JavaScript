@@ -8,8 +8,57 @@ setupModals();
 loadCategories();
 document.getElementById("formAddWork")?.addEventListener("submit", addWork);
 
+  // Référence au bouton de validation
+  const validateButton = document.getElementById("addWorkButton");
+  
+  // Références aux champs du formulaire
+  const fileInput = document.getElementById("file");
+  const titleInput = document.getElementById("title");
+  const categoryInput = document.getElementById("categoryInput");
+
+  // Ajouter un aperçu de l'image dans containerAddPhoto
+  fileInput.addEventListener("change", handleFileInputChange);
+  titleInput.addEventListener("input", validateForm);
+  categoryInput.addEventListener("change", validateForm);
+
+  function handleFileInputChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const previewImage = document.createElement("img");
+        previewImage.src = e.target.result;
+        previewImage.alt = "Aperçu de l'image sélectionnée";
+        previewImage.classList.add("preview-image");
+
+        const containerAddPhoto = document.querySelector(".containerAddPhoto");
+        containerAddPhoto.innerHTML = ""; // Supprime les anciens éléments
+        containerAddPhoto.appendChild(previewImage);
+        validateForm(); // Vérifie les champs après ajout d'une image
+      };
+      reader.readAsDataURL(file);
+    } else {
+      validateForm(); // Vérifie les champs si aucun fichier n'est sélectionné
+    }
+  }
+
+  function validateForm() {
+    // Vérifie si les trois champs sont remplis
+    const isFileSelected = fileInput.files.length > 0;
+    const isTitleFilled = titleInput.value.trim() !== "";
+    const isCategorySelected = categoryInput.value.trim() !== "";
+
+    if (isFileSelected && isTitleFilled && isCategorySelected) {
+      validateButton.disabled = false; // Active le bouton
+    } else {
+      validateButton.disabled = true; // Désactive le bouton
+    }
+  }
+
+  // Appel initial pour désactiver le bouton au chargement de la page
+  validateForm();
+
 // Ajouter l'aperçu de l'image dans containerAddPhoto
-const fileInput = document.getElementById("file");
 fileInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -189,14 +238,19 @@ async function deleteWorkInModale(work, imageContainerModale, index) {
 
 function createElement(tag, options = {}) {
   const element = document.createElement(tag);
-  console.log("element", element);
-  Object.assign(element, options);
-  console.log("option", options);
-  if (options.classes) element.classList.add(...options.classes);
-  if (options.attributes) {
+  if (options.classes && Array.isArray(options.classes)) {
+    element.classList.add(...options.classes);
+  }
+  if (options.attributes && typeof options.attributes === 'object') {
     Object.entries(options.attributes).forEach(([key, value]) =>
       element.setAttribute(key, value)
     );
+  }
+  if (options.style && typeof options.style === 'object') {
+    Object.assign(element.style, options.style);
+  }
+  if (options.innerText) {
+    element.innerText = options.innerText;
   }
   return element;
 }
@@ -263,20 +317,86 @@ function displayWorksInModal() {
   modalGallery.appendChild(formAddWork);
 
   // Image preview
-  formAddWork.querySelector('#file').addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const modalAddWork = document.getElementById('modaleAddWork'); // Modale d'ajout
+    const addPhotoButton = document.getElementById('addPhotoButton'); // Bouton pour ouvrir la modale
+  
+    if (addPhotoButton && modalAddWork) {
+      addPhotoButton.addEventListener('click', () => {
+        resetModalState(); // Réinitialise la modale
+        modalAddWork.classList.remove('hide'); // Affiche la modale
+        initFileInput(); // Initialise l'écouteur pour l'input file
+      });
+    }
+  
+    // Réinitialise l'état de la modale
+    function resetModalState() {
+      const formAddWork = document.getElementById('formAddWork');
+      if (formAddWork) {
+        formAddWork.reset(); // Réinitialise tous les champs du formulaire
+      }
+  
+      const previewImage = document.getElementById('previewImage');
+      if (previewImage) {
+        previewImage.src = ''; // Supprime l'aperçu de l'image
+        previewImage.style.display = 'none'; // Cache l'aperçu
+      }
+    }
+  
+    // Initialise l'écouteur d'événement pour le champ d'importation de fichier
+    function initFileInput() {
+      const formAddWork = document.getElementById('formAddWork');
+      if (!formAddWork) {
+        console.error("L'élément formAddWork est introuvable.");
+        return;
+      }
+  
+      const fileInput = formAddWork.querySelector('#file');
+      if (!fileInput) {
+        console.error("L'élément #file est introuvable.");
+        return;
+      }
+  
+      // Supprime les anciens écouteurs pour éviter les doublons
+      fileInput.removeEventListener('change', handleFileChange);
+      fileInput.addEventListener('change', handleFileChange);
+    }
+  
+    // Gestion de l'aperçu de l'image sélectionnée
+    function handleFileChange(event) {
+      const file = event.target.files[0];
+  
+      if (!file) {
+        console.warn("Aucun fichier sélectionné.");
+        return;
+      }
+  
+      if (!file.type.startsWith('image/')) {
+        console.error("Le fichier sélectionné n'est pas une image valide.");
+        return;
+      }
+  
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const previewImage = formAddWork.querySelector('#previewImage');
-        previewImage.src = e.target.result;
-        previewImage.style.display = 'block';
+      reader.onerror = () => {
+        console.error("Une erreur s'est produite lors de la lecture du fichier.");
       };
+  
+      reader.onload = (e) => {
+        const previewImage = document.getElementById('previewImage');
+        if (!previewImage) {
+          console.error("L'élément #previewImage est introuvable.");
+          return;
+        }
+        previewImage.src = e.target.result; // Définit la source de l'image à l'aperçu
+        previewImage.style.display = 'block'; // Affiche l'aperçu
+      };
+  
       reader.readAsDataURL(file);
     }
   });
-}
 
+  
+}
 const fileInput = document.getElementById("file");
 let image; 
 fileInput.addEventListener("change", function(){
@@ -311,7 +431,7 @@ async function addWork(event) {
       }
 
       // Rechargement des travaux et fermeture de la modale après le succès
-      // await displayWorksInModal();
+      await displayWorksInModal();
       loadCategories();
       closeModal();
   } catch (error) {

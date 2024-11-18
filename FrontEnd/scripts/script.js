@@ -135,10 +135,6 @@ function checkToken() {
     } else {
         // Masquer le bouton modifier et afficher les catégories
         if (editWorks) editWorks.classList.add('hide');
-        if (objectCategories) {
-            objectCategories.classList.remove('hide');
-            objectCategories.classList.add('show');
-        }
     }
 }
 
@@ -153,6 +149,10 @@ function logout() {
     loginLink.textContent = 'login';
     // Masquer le bouton modifier
     document.getElementById('edit-works').classList.add('hide');
+    if (objectCategories) {
+        objectCategories.classList.remove('hide');
+        objectCategories.classList.add('show'); 
+    }
 }
 
 // Appeler les fonctions qui récupèrent les données de l'API 
